@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <title>WebGL Globe</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+      html {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000000 url(/globe/loading.gif) center center no-repeat;
+        color: #ffffff;
+        font-family: sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        height: 100%;
+      }
+
+      #info {
+
+        font-size: 11px;
+        position: absolute;
+        bottom: 5px;
+        background-color: rgba(0,0,0,0.8);
+        border-radius: 3px;
+        right: 10px;
+        padding: 10px;
+
+      }
+
+      #currentInfo {
+        width: 270px;
+        position: absolute;
+        left: 20px;
+        top: 63px;
+		text-align = center;
+        background-color: rgba(0,0,0,0.2);
+
+        border-top: 1px solid rgba(255,255,255,0.4);
+        padding: 10px;
+      }
+	  
+	  #currentInfoStatus {
+		text-align = center;
+		font-size: 14px;
+	  }
+
+      a {
+        color: #aaa;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .bull {
+        padding: 0 5px;
+        color: #555;
+      }
+
+      #title {
+        position: absolute;
+        top: 20px;
+        width: 270px;
+        left: 20px;
+        background-color: rgba(0,0,0,0.2);
+        border-radius: 3px;
+        font: 20px Georgia;
+        padding: 10px;
+      }
+
+      .time {
+        font: 16px Georgia;
+        line-height: 26px;
+        height: 30px;
+        text-align: center;
+        float: left;
+        width: 90px;
+
+        cursor: pointer;
+        -webkit-transition: all 0.1s ease-out;
+      }
+
+
+      #ce span {
+        display: none;
+      }
+
+      #ce {
+        width: 107px;
+        height: 55px;
+        display: block;
+        position: absolute;
+        bottom: 15px;
+        left: 20px;
+        background: url(/globe/ce.png);
+      }
+	  
+
+
+    </style>
+  </head>
+  <body>
+
+  <div id="container"></div>
+
+  <div id="info">
+    <strong><a href="http://www.chromeexperiments.com/globe">WebGL Globe - originally from Google</a></strong> 
+	<span class="bull">&bull;</span> Created by the Josh Karper <span class="bull">&bull;</span> 
+	Data acquired from <a href="https://earthquake.usgs.gov/">USGS</a> (thanks!)
+	<span><span class="bull">&bull;</span> <span id='lastUpdated'>hello!</span></span>
+  </div>
+
+  <div id="currentInfo">
+    <span id="all_day"><button class="time" onclick="createGlobe('all_day.json')">All day</button></span>
+	<span id="all_week"><button class="time" onclick="createGlobe('all_week.json')">All week</button></span>
+	<span id="all_month"><button class="time" onclick="createGlobe('all_month.json')">All month</button></span>
+	<span><div id="currentInfoStatus"></div></span>
+	
+  </div>
+  
+	
+  
+
+  <div id="title">
+    Earthquakes
+  </div>
+
+  <a id="ce" href="http://www.chromeexperiments.com/globe">
+    <span>This is a Chrome Experiment</span>
+  </a>
+
+  <script type="text/javascript" src="/globe-again/third-party/Detector.js"></script>
+  <script type="text/javascript" src="/globe-again/third-party/three.min.js"></script>
+  <script type="text/javascript" src="/globe-again/third-party/Tween.js"></script>
+  <script type="text/javascript" src="/globe-again/globe.js"></script>
+  <script type="text/javascript">
+	if(!Detector.webgl){
+      Detector.addGetWebGLMessage();
+    } else {
+		var container = document.getElementById('container');
+		var globe = new DAT.Globe(container);
+		var xhr = new XMLHttpRequest();
+		window.onload = lastUpdated();
+		window.onload = createGlobe('all_day.json');
+	}
+	
+	
+	var globeAnimated = false; //Has the globe already been animated?
+	function createGlobe(jsonInput){	
+		setCurrentInfoStatusLoading(jsonInput)
+		xhr.open('GET', jsonInput, true);
+		xhr.onreadystatechange = function (e) {
+			if (xhr.readyState == 4 && xhr.status == 200){
+				globe.removeAllPoints();
+				var data = JSON.parse(xhr.responseText);
+				for (var i = 0; i < data.length; i++){
+					globe.addData(data[i][1], {format: 'magnitude', name: 'Earthquakes'});
+				}
+				
+				globe.createPoints();
+				if (!globeAnimated){ //globe becomes really slow if when animated again - this prevents that
+					globe.animate();
+					globeAnimated = true;
+				}
+				
+				document.body.style.backgroundImage = 'none';
+			}
+		};
+		xhr.send(null);
+		setCurrentInfoStatus(jsonInput);
+	}
+	
+	function setCurrentInfoStatusLoading(jsonInput){
+		var response;
+		if (jsonInput == 'all_day.json'){
+			response = "<center>Now loading all earthquakes in the past 24 hours...</center>";
+		} else if (jsonInput == 'all_week.json'){
+			response = "<center>Now loading all earthquakes in the last week...</center>";
+		} else {
+			response = "<center>Now loading all earthquakes in the last 30 days...</<center>"
+		}
+		
+		document.getElementById("currentInfoStatus").innerHTML = response;
+	}
+	
+	function setCurrentInfoStatus(jsonInput){
+		var response;
+		if (jsonInput == 'all_day.json'){
+			response = "<center>Past 24 hours</center>";
+		} else if (jsonInput == 'all_week.json'){
+			response = "<center>Past 7 days</center>";
+		} else {
+			response = "<center>Past 30 days</center>"
+		}
+		
+		document.getElementById("currentInfoStatus").innerHTML = response;	
+	}
+    
+	function lastUpdated(){
+		var done = false;
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', 'last_updated.json', true);
+		xhr.send(null);
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4 && xhr.status === 200 ) {
+
+				 var time = JSON.stringify(JSON.parse(xhr.responseText)).replace(/['"]+/g, '');
+				 
+		}
+		
+		var response = "Last updated: " + time;
+		document.getElementById('lastUpdated').innerHTML = response;
+		
+		console.log(response);
+	}
+		
+	
+	
+	}
+
+  </script>
+
+  </body>
+
+</html>
