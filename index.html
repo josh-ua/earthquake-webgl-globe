@@ -151,7 +151,7 @@
 	var globeAnimated = false; //Has the globe already been animated?
 	function createGlobe(jsonInput){	
 		setCurrentInfoStatusLoading(jsonInput)
-		xhr.open('GET', jsonInput, true);
+		xhr.open('GET', 'data/'+jsonInput, true);
 		xhr.onreadystatechange = function (e) {
 			if (xhr.readyState == 4 && xhr.status == 200){
 				globe.removeAllPoints();
@@ -202,7 +202,7 @@
 	function lastUpdated(){
 		var done = false;
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', 'last_updated.json', true);
+		xhr.open('GET', 'data/last_updated.json', true);
 		xhr.send(null);
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState === 4 && xhr.status === 200 ) {
