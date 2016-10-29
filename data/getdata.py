@@ -53,9 +53,9 @@ def main():
     processFiles();
     lastUpdated();
     print(str(datetime.now()))
-    print('Sleeping for 10 minutes...')
+    print('Sleeping for 24 hours...')
     print()
-    time.sleep(600)
+    time.sleep(86400)
 
 while True:
     main();
