@@ -49,8 +49,8 @@ def lastUpdated():
 
 #main method
 def main():
-   ## grabFiles();
-    ##processFiles();
+    grabFiles();
+    processFiles();
     lastUpdated();
 
 if __name__ == "__main__":
