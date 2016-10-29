@@ -34,7 +34,7 @@ def processFiles():
             if (row['latitude'] != "" and row['longitude'] != "" and row['mag'] != ""):
                 data.append(float(row['latitude']))
                 data.append(float(row['longitude']))
-                data.append(float(row['mag']) / 9.5)
+                data.append(float(row['mag'])/19)
         output.append([fileName.replace(".csv", ""), data])
         print("Processed "+fileName+ " successfully.")
         print("Converting output data to json file...")
