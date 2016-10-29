@@ -52,8 +52,14 @@ def main():
     grabFiles();
     processFiles();
     lastUpdated();
+    print(str(datetime.now()))
+    print('Sleeping for 10 minutes...')
+    print()
+    time.sleep(600)
 
-if __name__ == "__main__":
-    main()
+while True:
+    main();
+
+
 
 
