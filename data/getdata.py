@@ -3,6 +3,7 @@ import csv;
 import json;
 from datetime import datetime
 import time;
+import os;
 
 ##names of a files (these are constant), final output initalized
 csvNames = ["all_month.csv", "all_week.csv", "all_day.csv"];
@@ -40,7 +41,17 @@ def processFiles():
             json.dump(output, outfile);
 
 
-    print("Done");
+
+    print("Done converting - now deleting...");
+    for fileName in csvNames:
+        try:
+            os.remove(fileName);
+            print("Deleted: "+fileName)
+        except: ##either it's not there, or the OS is using it for some reason (that seems to only happen on windows)
+            print("Delete FAILED: "+fileName)
+
+    print("Done.")
+
 
 ##makes a json file with the current time - allows for "last updated" information to be displayed alongside globe
 def lastUpdated():
