@@ -1,5 +1,6 @@
 # earthquake-webgl-globe
-WebGL Globe that displays recent earthquakes - option to display earthquakes within the past 24 hours, 7 days or 30 days. Each point on the globe represents an earthquake origin, and the height of the data point represents the earthquake's magnitude. 
+###**[You can view the live globe here](http://ks3099106.kimsufi.com/josh/earthquakes/)**
+WebGL Globe that displays recent earthquakes - option to display earthquakes within the past 24 hours, 7 days or 30 days. Each point on the globe represents an earthquake origin, and the height of the data point represents the earthquake's magnitude. Best viewed using Chrome.
 
 This README.md file is a (slightly) longer and (slightly) more in-depth version of what I provided for the Capital One Challenge. 
 
