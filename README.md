@@ -2,7 +2,7 @@
 ###**[You can view the live globe here](http://ks3099106.kimsufi.com/josh/earthquakes/)**
 WebGL Globe that displays recent earthquakes - option to display earthquakes within the past 24 hours, 7 days or 30 days. Each point on the globe represents an earthquake origin, and the height of the data point represents the earthquake's magnitude. Best viewed using Chrome.
 
-This README.md file is a (slightly) longer and (slightly) more in-depth version of what I provided for the Capital One Challenge. 
+This README.md file is a (slightly) longer and (slightly) more in-depth version of the paragraph I provided for the Capital One Challenge. 
 
 ###'getdata.py' and the actual earthquake data
 The data is pulled from USGS in .csv files. I have written a python script to grab the files and convert them to the JSON format required for display on the globe ('getdata.py'). The .csv files then get deleted. This runs every 24 hours (and thus the globe data is updated every 24 hours). The globe requires the magnitude data for each column to be a value between 0 and 1 (or else the columns fly off the screen). To normalize the earthquake magnitudes, I divided each magnitude by 19 (the current 'max' of the Richter scale * 2).
